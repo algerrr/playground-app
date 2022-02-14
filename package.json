@@ -1,13 +1,13 @@
 {
   "name": "realtor",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "start:server": "nodemon ./backend/server.js"
+    "start:server": "ng build && nodemon ./backend/server.js"
   },
   "private": true,
   "dependencies": {
@@ -16,19 +16,23 @@
     "@angular/common": "~12.2.0",
     "@angular/compiler": "~12.2.0",
     "@angular/core": "~12.2.0",
+    "@angular/fire": "^7.2.0",
     "@angular/forms": "~12.2.0",
     "@angular/material": "^12.2.13",
     "@angular/platform-browser": "~12.2.0",
     "@angular/platform-browser-dynamic": "~12.2.0",
     "@angular/router": "~12.2.0",
-    "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.1",
     "cors": "^2.8.5",
     "express": "^4.17.2",
+    "firebase": "^9.4.0",
+    "firebase-admin": "^10.0.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.1.8",
     "mongoose-unique-validator": "^3.0.0",
     "multer": "^1.4.4",
+    "rxfire": "^6.0.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

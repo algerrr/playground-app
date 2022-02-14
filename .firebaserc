@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "alger-playground-8d318": {
+      "hosting": {
+        "realtor": [
+          "alger-playground-8d318"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "alger-playground-8d318"
+  }
+}

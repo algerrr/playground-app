@@ -3,14 +3,17 @@ const Post = require('../models/post');
 
 
 exports.AddPost = (req, res, next) => {
-  const url = req.protocol + '://' + req.get('host');
-
+  const url = req.protocol + "://" + req.get("host");
   const post = new Post({
     title: req.body.title,
     content: req.body.content,
     imagePath: url + "/images/" + req.file.filename,
-    creator: req.userData.userId
+    creator: req.userData.userId,
+    tags: req.body.tags
   });
+
+  console.log(post);
+
   post.save().then((createdPost) => {
     res.status(201).json({
       message: "Post Added successfully",
@@ -21,7 +24,8 @@ exports.AddPost = (req, res, next) => {
     });
   })
     .catch((error) => {
-      response.status(500).json({ message: "Creating a post failed!" })
+      console.log(error);
+      res.status(500).json({ message: "Creating a post failed!" })
     });
 };
 
@@ -37,7 +41,8 @@ exports.UpdatePost =
       title: req.body.title,
       content: req.body.content,
       imagePath: imagePath,
-      creator: req.userData.userId
+      creator: req.userData.userId,
+      tags: req.body.tags
     });
     console.log(post);
     Post.updateOne(
@@ -80,22 +85,38 @@ exports.getPost = (req, res, next) => {
   const pageSize = +req.query.pagesize;
   const currentPage = +req.query.page;
   const postQuery = Post.find();
+
   let fetchedPosts;
+  let fetchedTagString = '';
+  let fetchedTags = ['All'];
+
+
   if (pageSize && currentPage) {
     postQuery
       .skip(pageSize * (currentPage - 1))
       .limit(pageSize);
   }
+
   postQuery
     .then(documents => {
       fetchedPosts = documents;
+      for (let i = 0; i < documents.length; i++) {
+        let tempArr = documents[i].get("tags").split(',');
+        for (let j = 0; j < tempArr.length; j++) {
+          if (!fetchedTags.includes(tempArr[j])) {
+            fetchedTags.push(tempArr[j]);
+          }
+        }
+      }
+      fetchedTagString = fetchedTags.toLocaleString();
       return Post.count();
     })
     .then(count => {
       res.status(200).json({
         message: "Posts fetched successfully!",
         posts: fetchedPosts,
-        maxPosts: count
+        maxPosts: count,
+        tags: fetchedTagString
       });
     })
     .catch(err => {
@@ -106,11 +127,15 @@ exports.getPost = (req, res, next) => {
 };
 
 exports.getPostById = (req, res, next) => {
+  console.log("IN getPostById");
+  // if(req.params.tags){
+  //   next();
+  // }
   Post.findById(req.params.id).then(post => {
     if (post) {
       res.status(200).json(post);
     } else {
-      res.status(404).json({ message: "Post not found!" })
+      res.status(404).json({ message: "Post not found by ID!" });
     }
   })
     .catch(err => {
@@ -118,4 +143,73 @@ exports.getPostById = (req, res, next) => {
         message: "Error fetching Post with id: " + req.params.id
       });
     });
+};
+
+exports.getPostByTag = (req, res, next) => {
+  const pageSize = +req.query.pagesize;
+  const currentPage = +req.query.page;
+  const tags = req.query.tags;
+  // console.log(tags);
+  if(tags == 'All') {
+    postQuery = Post.find();
+  }else{
+    postQuery = Post.find({ tags: { $regex: tags } });
+  }
+  let fetchedPosts;
+  let fetchedTagString = '';
+  let fetchedTags = ['All'];
+
+  if (pageSize && currentPage) {
+    postQuery
+      .skip(pageSize * (currentPage - 1))
+      .limit(pageSize);
+  }
+
+  postQuery
+    .then(documents => {
+      fetchedPosts = documents;
+      for (let i = 0; i < documents.length; i++) {
+        let tempArr = documents[i].get("tags").split(',');
+        for (let j = 0; j < tempArr.length; j++) {
+          if (!fetchedTags.includes(tempArr[j])) {
+            fetchedTags.push(tempArr[j]);
+          }
+        }
+      }
+      fetchedTagString = fetchedTags.toLocaleString();
+      return Post.count();
+    })
+    .then(count => {
+      // for(searchTags in )
+      // console.log(count);
+      res.status(200).json({
+        message: "Posts fetched successfully!",
+        posts: fetchedPosts,
+        maxPosts: count,
+        tags: fetchedTagString
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: "Error fetching posts!"
+      });
+    });
+
+
+  // Post.find({ tags: { $regex: req.query.tags } })
+  //   .then(post => {
+  //     console.log("IN then");
+  //     console.log(post);
+  //     if (post) {
+  //       res.status(200).json(post);
+  //     } else {
+  //       res.status(404).json({ message: "Post not found by Tag!" })
+  //     }
+  //   })
+  //   .catch(err => {
+  //     console.log(err);
+  //     res.status(500).json({
+  //       message: "Error fetching Post with tags: " + req.params.tags
+  //     });
+  //   });
 };

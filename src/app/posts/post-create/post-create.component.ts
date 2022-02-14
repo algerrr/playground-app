@@ -20,6 +20,7 @@ export class PostCreateComponent implements OnInit, OnDestroy {
   isLoading = false;
   form!: FormGroup;
   imagePreview!: string;
+  tagsList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
   private mode = 'create';
   private postId!: string;
   private authStatusSub: Subscription;
@@ -38,14 +39,15 @@ export class PostCreateComponent implements OnInit, OnDestroy {
       'image': new FormControl(null, {
         validators: [Validators.required],
         asyncValidators: [mimeType]
-      })
+      }),
+      'tags': new FormControl(null, { validators: [Validators.required]})
     });
     this.route.paramMap.subscribe((params: ParamMap) => {
       if (params.has('postId')) {
         this.mode = 'edit';
         this.postId = params.get('postId') as string;
         this.isLoading = true;
-        this.postsService.getPost(this.postId)
+        this.postsService.getPostById(this.postId)
           .subscribe(postData => {
             this.isLoading = false;
             this.post = {
@@ -53,13 +55,16 @@ export class PostCreateComponent implements OnInit, OnDestroy {
               title: postData.title,
               content: postData.content,
               imagePath: postData.imagePath,
-              creator: postData.creator
+              creator: postData.creator,
+              tags: postData.tags
             };
             this.form.setValue({
               title: this.post.title,
               content: this.post.content,
-              image: this.post.imagePath
+              image: this.post.imagePath,
+              tags : this.post.tags
             });
+            this.form.controls.tags.patchValue(this.post.tags.split(','));
           });
       } else {
         this.mode = 'create';
@@ -79,6 +84,15 @@ export class PostCreateComponent implements OnInit, OnDestroy {
     reader.readAsDataURL(file);
   }
 
+  onSelectChange(): void {
+    const selectValue = this.form.value.tags as Array<string>;
+    for (let i = 0; i < selectValue.length; i++) {
+      if(selectValue[i] == "none"){
+        this.form.controls.tags.patchValue(['none']);
+      }
+    }
+  }
+
   onSavePost(): void {
     if (this.form.invalid) {
       return;
@@ -88,14 +102,16 @@ export class PostCreateComponent implements OnInit, OnDestroy {
       this.postsService.addPosts(
         this.form.value.title,
         this.form.value.content,
-        this.form.value.image
+        this.form.value.image,
+        this.form.value.tags.toString()
       );
     } else {
       this.postsService.updatePost(
         this.postId,
         this.form.value.title,
         this.form.value.content,
-        this.form.value.image
+        this.form.value.image,
+        this.form.value.tags.toString()
       );
     }
     this.form.reset();

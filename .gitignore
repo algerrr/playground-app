@@ -3,6 +3,7 @@
 # compiled output
 /dist
 /tmp
+/backend/angular
 /out-tsc
 # Only exists if Bazel was run
 /bazel-out
@@ -39,7 +40,15 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
+.jpg
+.jpeg
 
 # System Files
 .DS_Store
 Thumbs.db
+
+# Firebase
+.firebase
+*-debug.log
+.runtimeconfig.json
+backend/images/*.jpeg

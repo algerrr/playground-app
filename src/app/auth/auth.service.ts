@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subject } from "rxjs";
-import { environment } from "src/environments/environment";
+import { environment } from "../../environments/environment";
 import { AuthData } from "./auth-data.model";
 
 const BACKEND_URL = environment.apiUrl + "/user/";
@@ -33,9 +33,11 @@ export class AuthService {
   createUser(email: string, password: string) {
     const authData: AuthData = { email: email, password: password };
     this.http.post(BACKEND_URL + "signup", authData)
-      .subscribe(() => {
+      .subscribe(resp => {
+        console.log(resp);
         this.router.navigate["/"];
       }, error => {
+        console.log(error)
         this.authStatusListener.next(false);
       });
   }
@@ -66,10 +68,11 @@ export class AuthService {
   autoAuthUser() {
     const authInformation = this.getAuthData();
     if (!authInformation) {
+      this.logout();
       return;
     }
     const now = new Date();
-    const expiresIn = authInformation.expirationDate.getTime() + now.getTime();
+    const expiresIn = authInformation.expirationDate.getTime() - now.getTime();
     if (expiresIn > 0) {
       this.token = authInformation.token;
       this.isAuthenticated = true;

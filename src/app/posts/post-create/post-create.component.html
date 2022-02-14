@@ -25,6 +25,15 @@
       > </textarea>
     <mat-error *ngIf="form.get('content').invalid">Please Enter a Post Content</mat-error>
     </mat-form-field>
+    <mat-form-field>
+      <mat-label>List of Post Tags</mat-label>
+      <mat-select formControlName="tags" multiple (selectionChange)="onSelectChange()">
+        <mat-option value="none">None</mat-option >
+        <mat-option *ngFor="let tag of tagsList" [value]="tag">{{tag}}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('tags').hasError('required')">Please choose a tag</mat-error>
+    </mat-form-field>
+    <p>Selected: {{form.get('tags').value}}</p>
     <button
       mat-raised-button
       color="primary"

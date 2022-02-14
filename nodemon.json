@@ -1,6 +1,15 @@
 {
   "env": {
-    "MONGO_ATLAS_PW": "fZUS2M2Ldg6J61ss",
-    "JWT_KEY" : "secret_this_should_be_longer"
+    "MONGO_ATLAS_PW": "Qr6yrOHyL4WRJuMu",
+    "JWT_KEY" : "secret_this_should_be_longer",
+    "firebaseConfig" : {
+      "apiKey": "AIzaSyDF4MIbXPAG98VzbHZUjPpVXsCwV5xafxw",
+      "authDomain": "alger-playground-8d318.firebaseapp.com",
+      "projectId": "alger-playground-8d318",
+      "storageBucket": "alger-playground-8d318.appspot.com",
+      "messagingSenderId": "919041058308",
+      "appId": "1:919041058308:web:b818964f04fe9493807751",
+      "measurementId": "G-1PSJ0RYFTR"
+    }
   }
 }

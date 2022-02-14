@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
@@ -29,7 +29,7 @@ exports.userLogin = (req, res, next) => {
   User.findOne({ email: req.body.email })
     .then(user => {
       if (!user) {
-        return res.status(401).json({ message: "Auth Failed" });
+        return res.status(401).json({ message: "Auth Failed! No such User" });
       }
       fetchedUser = user;
       return bcrypt.compare(req.body.password, user.password);
@@ -40,7 +40,7 @@ exports.userLogin = (req, res, next) => {
       }
       const token = jwt.sign(
         { email: fetchedUser.email, userId: fetchedUser.id },
-        process.env.JWT_TOKEN,
+        process.env.JWT_KEY,
         { expiresIn: "1h" }
       );
       res.status(200).json({
@@ -50,6 +50,7 @@ exports.userLogin = (req, res, next) => {
       });
     })
     .catch(err => {
-      return res.status(401).json({ message: "Invalid Authentication Credentials!" });
+      console.log(err);
+      return res.status(401).json({ message: "Bad Authentication Credentials!" });
     });
 }
