@@ -11,7 +11,7 @@ const userRoutes = require('./routes/user');
 const app = express();
 const connection_url = 'mongodb+srv://tester:' + process.env.MONGO_ATLAS_PW + '@cluster0.ha07g.mongodb.net/angular-post?retryWrites=true&w=majority';
 
-console.log(connection_url);
+// console.log(connection_url);
 
 mongoose.connect(connection_url)
   .then(() => {
@@ -31,13 +31,18 @@ mongoose.connect(connection_url)
 // }
 // app.use(requireHTTPS());
 // app.use(express.static(path.join(__dirname, './angular')));
-app.use(express.static('./backend/angular'));
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use("/images", express.static(path.join("backend/images")));
-// app.use("/", express.static(path.join(__dirname, "angular")));
+
+//development
+// app.use("/images", express.static(path.join("backend/images")));
+// app.use(express.static('./backend/angular'));
+
+//prod
+app.use("/images", express.static(path.join(__dirname, "images")));
+app.use("/", express.static(path.join(__dirname, "angular")));
 
 //Middlewares
 app.use((req, res, next) => {
