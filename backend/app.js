@@ -31,7 +31,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(express.static('./backend/angular'));
 
 //prod
-console.log(path.join(__dirname, "backend/images"));
+console.log(path.join(__dirname));
+console.log(path.join(__dirname, "images"));
 console.log(path.join(__dirname, "angular"));
 app.use("/images", express.static(path.join(__dirname, "backend/images")));
 app.use("/", express.static(path.join(__dirname, "angular")));
