@@ -31,7 +31,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(express.static('./backend/angular'));
 
 //prod
-app.use("/images", express.static(path.join(__dirname, "images")));
+app.use("/images", express.static(path.join(__dirname, "backend/images")));
 app.use("/", express.static(path.join(__dirname, "angular")));
 
 //Middlewares
