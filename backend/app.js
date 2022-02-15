@@ -11,6 +11,8 @@ const userRoutes = require('./routes/user');
 const app = express();
 const connection_url = 'mongodb+srv://tester:' + process.env.MONGO_ATLAS_PW + '@cluster0.ha07g.mongodb.net/angular-post?retryWrites=true&w=majority';
 
+console.log(connection_url);
+
 mongoose.connect(connection_url)
   .then(() => {
     console.log('Connected to Database!');
