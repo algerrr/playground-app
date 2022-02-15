@@ -51,7 +51,6 @@ Thumbs.db
 .firebase
 *-debug.log
 .runtimeconfig.json
-backend/images/*.jpeg
 
 
 #dev files
