@@ -22,16 +22,6 @@ mongoose.connect(connection_url)
     console.log('Failed to connect to Database!');
   });
 
-// function requireHTTPS(req, res, next) {
-//   // The 'x-forwarded-proto' check is for Heroku
-//   if (!req && !req.secure && req.get('x-forwarded-proto') !== 'https') {
-//     return res.redirect('https://' + req.get('host') + req.url);
-//   }
-//   next();
-// }
-// app.use(requireHTTPS());
-// app.use(express.static(path.join(__dirname, './angular')));
-
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -54,13 +44,10 @@ app.use((req, res, next) => {
 
 
 //router
-app.get('/home', (req, res) => {
-  res.sendFile('index.html', { root: 'backend/angular' });
-});
 app.use("/api/posts", postRoutes);
 app.use("/api/user", userRoutes);
-// app.use((req, res, next) => {
-//   res.sendFile(path.join(__dirname + "angular", "index.html"));
-// });
+app.use((req, res, next) => {
+  res.sendFile(path.join(__dirname, "angular", "index.html"));
+});
 
 module.exports = app;
