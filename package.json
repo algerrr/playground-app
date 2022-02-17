@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "node ./backend/server.js",
-    "build": "ng build",
+    "build": "ng build && node ./backend/server.js",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "start:server": "nodemon ./backend/server.js"
